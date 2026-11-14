@@ -12,8 +12,19 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @GetMapping("/validate/{eventId}")
-    public String validateEvent(@PathVariable Long eventId) {
-        return bookingService.validateEvent(eventId);
+    @GetMapping("/ping")
+    public String ping() {
+        return "Le Booking Service est vivant V2 !";
+    }
+
+    // On remet en GET pour tester facilement dans le navigateur
+    @GetMapping("/validate/{eventId}/{customerId}")
+    public String validateEvent(@PathVariable Long eventId, @PathVariable Long customerId) {
+        try {
+            return bookingService.validateAndBook(eventId, customerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERREUR : " + e.getClass().getSimpleName() + " - " + e.getMessage();
+        }
     }
 }
